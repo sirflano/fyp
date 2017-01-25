@@ -11,6 +11,9 @@ public class shooty : MonoBehaviour {
     private SerialPort controller;
     private string messageFromController;
     private bool runThread = true;
+    private float x;
+    private float y;
+    private float z;
 
     public bool Connected = false;
     public string portName = "COM3";
@@ -42,12 +45,13 @@ public class shooty : MonoBehaviour {
             GameObject bullet = Instantiate(bul, transform.position, transform.rotation) as GameObject;
             curdown = cooldown;
         }
+        transform.rotation = Quaternion.Euler(x, y, z);
         curdown -= 1 * Time.deltaTime;
     }
     void ProcessMessage(string message)
     {
-        /*string[] decoded = message.Split(':');
-        float value = float.Parse(decoded[1]);
+        string[] decoded = message.Split(':');
+        //float value = float.Parse(decoded[1]);
         switch (decoded[0])
         {
             case "H":
@@ -56,7 +60,14 @@ public class shooty : MonoBehaviour {
             case "L":
                 button = false;
                 break;
-        }*/
+        }
+        //print(message);
+        x = float.Parse(decoded[1]);
+        y = float.Parse(decoded[2]);
+        z = float.Parse(decoded[3]);
+
+        //transform.rotation = Quaternion.Euler(float.Parse(decoded[1]), float.Parse(decoded[2]), float.Parse(decoded[3]));
+        /*
         print(message);
         switch(message)
         {
@@ -66,7 +77,7 @@ public class shooty : MonoBehaviour {
             case "L":
                 button = false;
                 break;
-        }
+        }*/
 
     }
 

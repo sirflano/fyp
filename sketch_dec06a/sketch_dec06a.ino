@@ -49,13 +49,13 @@ void loop() {
   else if(buttonState == LOW) {
     Serial.print("L");
   }
-  Serial.print("\tX: ");
+  Serial.print(":");
   Serial.print(event.orientation.x, 4);
-  Serial.print("\tY: ");
+  Serial.print(":");
   Serial.print(event.orientation.y, 4);
-  Serial.print("\tZ: ");
+  Serial.print(":");
   Serial.print(event.orientation.z, 4);
 
   Serial.println("");
-  delay(BNO055_SAMPLERATE_DELAY_MS);
+  //delay(BNO055_SAMPLERATE_DELAY_MS);
 }

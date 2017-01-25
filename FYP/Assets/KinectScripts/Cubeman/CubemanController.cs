@@ -40,6 +40,8 @@ public class CubemanController : MonoBehaviour
 	private Quaternion initialRotation;
 	private Vector3 initialPosOffset = Vector3.zero;
 	private uint initialPosUserID = 0;
+
+    public float jitterFilterTresh;
 	
 	
 	void Start () 
@@ -75,7 +77,7 @@ public class CubemanController : MonoBehaviour
 		
 		initialPosition = transform.position;
 		initialRotation = transform.rotation;
-		//transform.rotation = Quaternion.identity;
+		transform.rotation = Quaternion.identity;
 	}
 	
 	// Update is called once per frame
@@ -152,9 +154,19 @@ public class CubemanController : MonoBehaviour
 						posJoint.x = -posJoint.x;
 						posJoint.z = -posJoint.z;
 					}
-
-					bones[i].transform.localPosition = posJoint;
-					bones[i].transform.rotation = rotJoint;
+                    if(Vector3.Distance(bones[i].transform.localPosition, posJoint) >= jitterFilterTresh)
+                    {
+                        if(i==3)
+                        {
+                            //Camera.main.transform.position = posJoint;
+                            bones[i].transform.localPosition = posJoint;
+                        }
+                        else
+                        {
+					        bones[i].transform.localPosition = posJoint;
+					        bones[i].transform.rotation = rotJoint;
+                        }
+                    }
 				}
 				else
 				{

@@ -13,6 +13,7 @@ public class handsTest : MonoBehaviour {
     public GameObject gun;
     //public GameObject camera;
     private Vector3 oldPos;
+    private Vector3 gunPos;
 
     //public GameObject BodySrcManager;
     public float xpos;
@@ -53,7 +54,8 @@ public class handsTest : MonoBehaviour {
                 //Vector3 relPos = handPos - headPos;
                 //Vector3 jointDir = kinectManager.GetDirectionBetweenJoints(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight, true, false);
                 //Vector3 jointDir = Vector3.Dot(handPos, leftHandPos);
-                
+
+                handPos.z = -handPos.z;
                 handZPos = handPos.z;
                 handXpos = handPos.x;
                 handYpos = handPos.y;
@@ -70,7 +72,11 @@ public class handsTest : MonoBehaviour {
                     //zpos = angle.z;
                     //angle.SetEulerAngles(xpos, ypos, zpos);
                     //Vector3 gunPos = angle * handPos;
-                    gun.transform.localPosition = handPos;
+                    Quaternion rot = gun.transform.rotation;
+
+                    gunPos = handPos + gun.transform.rotation * new Vector3(0, 0, 0.5f);// * -0.5f;
+                    Debug.Log(handPos + " Becomes " + gunPos);
+                    gun.transform.localPosition = gunPos;
                     //camera.transform.localPosition = headPos;
                     //gun.transform.rotation = angle;
                     oldPos = handPos;
