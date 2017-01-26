@@ -48,8 +48,8 @@ public class roomBuilder : MonoBehaviour {
 	void Start () {
         //build((int)initWidth, (int)initLength);
         room toBeBuilt = new room((int)Random.Range(minLength, maxLength), (int)Random.Range(minWidth, maxWidth));
-        toBeBuilt.tiles = generateCave(toBeBuilt);
-        //toBeBuilt.tiles = generateRoom(toBeBuilt);
+        toBeBuilt = generateCave(toBeBuilt);
+        //toBeBuilt = generateRoom(toBeBuilt);
         build(toBeBuilt);
 	}
 	
@@ -58,7 +58,7 @@ public class roomBuilder : MonoBehaviour {
 	
 	}
 
-    public tile[,] generateRoom(room toBeBuilt)
+    public room generateRoom(room toBeBuilt)
     {
         tile[,] tiles = toBeBuilt.tiles;
         for(int i = 0; i < tiles.GetLength(0); i++)
@@ -68,11 +68,11 @@ public class roomBuilder : MonoBehaviour {
                 tiles[i, j].tiletype = 1;
             }
         }
-        addDoors(toBeBuilt);
-        return tiles;
+        toBeBuilt = addDoors(toBeBuilt);
+        return toBeBuilt;
     }
 
-    public tile[,] generateCave(room toBeBuilt)
+    public room generateCave(room toBeBuilt)
     {
         tile[,] tiles = toBeBuilt.tiles;
         setUpGrid(tiles);
@@ -153,8 +153,8 @@ public class roomBuilder : MonoBehaviour {
                 }
                 else
                 {
-                    addDoors(toBeBuilt);
-                    return tiles;
+                    toBeBuilt = addDoors(toBeBuilt);
+                    return toBeBuilt;
                 }
             }
             else
@@ -166,7 +166,7 @@ public class roomBuilder : MonoBehaviour {
             //Debug.Log(counter);
         }
         
-            return tiles;
+            return toBeBuilt;
     }
 
     private void setUpGrid(tile[,] tiles)
@@ -186,26 +186,25 @@ public class roomBuilder : MonoBehaviour {
         }
     }
 
-    private void addTexture(tile[,] tiles)
+    private room addTexture(room toBeBuilt)
     {
-
+        return toBeBuilt;
     }
 
-    private void addDoors(room toBeBuilt)
+    private room addDoors(room toBeBuilt)
     {
-        
-        Vector2 door1Path = new Vector2(Random.Range(0, toBeBuilt.tiles.GetLength(0)-1), (int)Random.Range(0, toBeBuilt.tiles.GetLength(1)-1));
-        Vector2 door2Path = new Vector2(Random.Range(0, toBeBuilt.tiles.GetLength(0)-1), (int)Random.Range(0, toBeBuilt.tiles.GetLength(1)-1));
+        Vector2 door1Path = new Vector2(Random.Range(0, toBeBuilt.tiles.GetLength(0)), (int)Random.Range(0, toBeBuilt.tiles.GetLength(1)));
+        Vector2 door2Path = new Vector2(Random.Range(0, toBeBuilt.tiles.GetLength(0)), (int)Random.Range(0, toBeBuilt.tiles.GetLength(1)));
         bool doorInSet = false;
         bool doorOutSet = false;
-        bool door1x = Random.Range(0, 1) > 0.5f;
-        bool door2x = Random.Range(0, 1) > 0.5f;
+        bool door1x = Random.Range(0, 2) >= 1;
+        bool door2x = Random.Range(0, 2) >= 1;
 
         while (!doorInSet)
         {
             if (door1x)
             {
-                if(Random.Range(0,1) > 0.5f)
+                if(Random.Range(0,2) <= 1)
                 {
                     toBeBuilt.doorInSide = new Vector2(1, 0);
                     for (int i = 0; i < toBeBuilt.tiles.GetLength(0); i++)
@@ -236,7 +235,7 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
-                if(Random.Range(0,1) > 0.5f)
+                if(Random.Range(0,2) <= 1)
                 {
                     toBeBuilt.doorInSide = new Vector2(0, 1);
                     for (int i = 0; i < toBeBuilt.tiles.GetLength(1); i++)
@@ -252,9 +251,9 @@ public class roomBuilder : MonoBehaviour {
                 }
                 else
                 {
+                        toBeBuilt.doorInSide = new Vector2(0, -1);
                     for (int i = toBeBuilt.tiles.GetLength(1)-1; i >=0; i--)
                     {
-                        toBeBuilt.doorInSide = new Vector2(0, -1);
                         if (toBeBuilt.tiles[(int)door1Path.x, i].tiletype == 1)
                         {
                             toBeBuilt.tiles[(int)door1Path.x, i].tiletype = 2;
@@ -266,14 +265,15 @@ public class roomBuilder : MonoBehaviour {
                 }
             }
             door1Path = new Vector2(Random.Range(0, toBeBuilt.tiles.GetLength(0)), (int)Random.Range(0, toBeBuilt.tiles.GetLength(1)));
+            
         }
         while (!doorOutSet)
         {
             if (door2x)
             {
-                if(Random.Range(0,1) > 0.5f)
+                if(Random.Range(0,2) <= 1)
                 {
-                    toBeBuilt.doorOutSide = new Vector2(1, 0);
+                    toBeBuilt.doorOutSide = new Vector2(0, 1);
                     for (int i = 0; i < toBeBuilt.tiles.GetLength(1); i++)
                     {
                         if (toBeBuilt.tiles[(int)door2Path.x, i].tiletype == 1)
@@ -287,7 +287,7 @@ public class roomBuilder : MonoBehaviour {
                 }
                 else
                 {
-                    toBeBuilt.doorOutSide = new Vector2(-1, 0);
+                    toBeBuilt.doorOutSide = new Vector2(0, -1);
                     for (int i = toBeBuilt.tiles.GetLength(1)-1; i >=0; i--)
                     {
                         if (toBeBuilt.tiles[(int)door2Path.x, i].tiletype == 1)
@@ -303,9 +303,9 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
-                if(Random.Range(0,1) > 0.5f)
+                if(Random.Range(0,2) <= 1)
                 {
-                    toBeBuilt.doorOutSide = new Vector2(0, 1);
+                    toBeBuilt.doorOutSide = new Vector2(1, 0);
                     for (int i = 0; i < toBeBuilt.tiles.GetLength(0); i++)
                     {
 
@@ -321,8 +321,8 @@ public class roomBuilder : MonoBehaviour {
                 }
                 else
                 {
-                    toBeBuilt.doorOutSide = new Vector2(0, -1);
-                    for (int i = toBeBuilt.tiles.GetLength(1)-1; i >=0; i--)
+                    toBeBuilt.doorOutSide = new Vector2(-1, 0);
+                    for (int i = toBeBuilt.tiles.GetLength(0)-1; i >=0; i--)
                     {
 
                         if (toBeBuilt.tiles[i, (int)door2Path.y].tiletype == 1)
@@ -342,10 +342,16 @@ public class roomBuilder : MonoBehaviour {
         if(Vector2.Distance(door1Path, door2Path) < minDoorDist) {
             toBeBuilt.tiles[(int)door1Path.x, (int)door1Path.y].tiletype = 1;
             toBeBuilt.tiles[(int)door2Path.x, (int)door2Path.y].tiletype = 1;
+            toBeBuilt.doorIn = toBeBuilt.doorInSide = toBeBuilt.doorOut = toBeBuilt.doorOutSide = new Vector2(0, 0);
             door1Path = new Vector2(0, 0);
             door2Path = new Vector2(0, 0);
             addDoors(toBeBuilt);
         }
+        Debug.Log("Just set Door In x:" + toBeBuilt.doorIn.x + " y:" + toBeBuilt.doorIn.y + "Door out x:" + toBeBuilt.doorOut.x + " y:" + toBeBuilt.doorOut.y);
+        Debug.Log("DoorInSide x:" + toBeBuilt.doorInSide.x + " y:" + toBeBuilt.doorOutSide);
+        Debug.Log("DoorOutSide x:" + toBeBuilt.doorOutSide.x + " y:" + toBeBuilt.doorOutSide.y);
+
+        return toBeBuilt;
     }
 
     public void build(room toBeBuilt)
@@ -414,7 +420,7 @@ public class roomBuilder : MonoBehaviour {
         tile[,] tiles = toBeBuilt.tiles;
         if ((i - 1 < 0 || tiles[i - 1, j].tiletype == 0))
         {
-            if((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.x == -1)|| (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.x == -1))
+            if((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.x == 1)|| (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.x == 1))
             {
                 Vector3 wallPos = new Vector3(transform.position.x +i - 0.5f, roofHeight / 2, transform.position.z + j);
                 Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.forward);
@@ -427,6 +433,8 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Door In x: "+toBeBuilt.doorIn.x+" y:"+toBeBuilt.doorIn.y+" Door Out x:"+toBeBuilt.doorOut.x+" y:"+toBeBuilt.doorOut.y+" CurrentPos x:"+i+" y:"+j);
+                Debug.Log("DoorInSide x:" + toBeBuilt.doorInSide.x + " y:" + toBeBuilt.doorInSide.y + " DoorOutSide x:" + toBeBuilt.doorOutSide.x + " y:" + toBeBuilt.doorOutSide.y);
                 Vector3 wallPos = new Vector3(transform.position.x + i - 0.5f, roofHeight / 2, transform.position.z + j);
                 Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.left) * Quaternion.AngleAxis(90, Vector3.forward);
                 tiles[i, j].floorTile = Instantiate(wallTile, wallPos, wallRot) as GameObject;
@@ -434,7 +442,7 @@ public class roomBuilder : MonoBehaviour {
         }
         if((i+1 >= tiles.GetLength(0) || tiles[i+1, j].tiletype == 0)) 
         {
-            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.x == 1) || (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.x == 1))
+            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.x == -1) || (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.x == -1))
             {
             Vector3 wallPos = new Vector3(transform.position.x + 0.5f + i, roofHeight / 2, transform.position.z + j);
             Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.forward);
@@ -447,6 +455,8 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Door In x: " + toBeBuilt.doorIn.x + " y:" + toBeBuilt.doorIn.y + " Door Out x:" + toBeBuilt.doorOut.x + " y:" + toBeBuilt.doorOut.y + " CurrentPos x:" + i + " y:" + j);
+                Debug.Log("DoorInSide x:" + toBeBuilt.doorInSide.x + " y:" + toBeBuilt.doorInSide.y + " DoorOutSide x:" + toBeBuilt.doorOutSide.x + " y:" + toBeBuilt.doorOutSide.y);
                 Vector3 wallPos = new Vector3(transform.position.x + 0.5f + i, roofHeight / 2, transform.position.z + j);
                 Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(90, Vector3.forward);
                 tiles[i, j].floorTile = Instantiate(wallTile, wallPos, wallRot) as GameObject;
@@ -454,7 +464,7 @@ public class roomBuilder : MonoBehaviour {
         }
         if((j-1 < 0 || tiles[i,j-1].tiletype == 0))
         {
-            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.y == -1) || (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.y == -1))
+            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.y == 1) || (toBeBuilt.doorOut.x == i+1 && toBeBuilt.doorOut.y == j+1 && toBeBuilt.doorOutSide.y == 1))
             {
             Vector3 wallPos = new Vector3(transform.position.x + i, roofHeight / 2, transform.position.z + j - 0.5f);
             Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(0, Vector3.up);
@@ -468,6 +478,8 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Door In x: " + toBeBuilt.doorIn.x + " y:" + toBeBuilt.doorIn.y + " Door Out x:" + toBeBuilt.doorOut.x + " y:" + toBeBuilt.doorOut.y + " CurrentPos x:" + i + " y:" + j);
+                Debug.Log("DoorInSide x:" + toBeBuilt.doorInSide.x + " y:" + toBeBuilt.doorInSide.y + " DoorOutSide x:" + toBeBuilt.doorOutSide.x + " y:" + toBeBuilt.doorOutSide.y);
                 Vector3 wallPos = new Vector3(transform.position.x + i, roofHeight / 2, transform.position.z + j - 0.5f);
                 Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(0, Vector3.up);
                 tiles[i, j].floorTile = Instantiate(wallTile, wallPos, wallRot) as GameObject;
@@ -475,7 +487,7 @@ public class roomBuilder : MonoBehaviour {
         }
         if((j+1 >= tiles.GetLength(1) || tiles[i,j+1].tiletype==0))
         {
-            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.y == 1) || (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.y == 1))
+            if ((toBeBuilt.doorIn.x == i && toBeBuilt.doorIn.y == j && toBeBuilt.doorInSide.y == -1) || (toBeBuilt.doorOut.x == i && toBeBuilt.doorOut.y == j && toBeBuilt.doorOutSide.y == -1))
             {
             Vector3 wallPos = new Vector3(transform.position.x + i, roofHeight / 2, transform.position.z + 0.5f + j);
             Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(0, Vector3.up);
@@ -488,6 +500,8 @@ public class roomBuilder : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Door In x: " + toBeBuilt.doorIn.x + " y:" + toBeBuilt.doorIn.y + " Door Out x:" + toBeBuilt.doorOut.x + " y:" + toBeBuilt.doorOut.y + " CurrentPos x:" + i + " y:" + j);
+                Debug.Log("DoorInSide x:" + toBeBuilt.doorInSide.x + " y:" + toBeBuilt.doorInSide.y + " DoorOutSide x:" + toBeBuilt.doorOutSide.x + " y:" + toBeBuilt.doorOutSide.y);
                 Vector3 wallPos = new Vector3(transform.position.x + i, roofHeight / 2, transform.position.z + 0.5f + j);
                 Quaternion wallRot = Quaternion.AngleAxis(90, Vector3.right) * Quaternion.AngleAxis(0, Vector3.up);
                 tiles[i, j].floorTile = Instantiate(wallTile, wallPos, wallRot) as GameObject;
