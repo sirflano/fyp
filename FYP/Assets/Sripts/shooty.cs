@@ -62,8 +62,8 @@ public class shooty : MonoBehaviour {
                 break;
         }
         //print(message);
-        x = float.Parse(decoded[1]);
-        y = float.Parse(decoded[2]);
+        y = float.Parse(decoded[1]);
+        x = float.Parse(decoded[2]);
         z = float.Parse(decoded[3]);
 
         //transform.rotation = Quaternion.Euler(float.Parse(decoded[1]), float.Parse(decoded[2]), float.Parse(decoded[3]));

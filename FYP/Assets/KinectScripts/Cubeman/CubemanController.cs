@@ -156,7 +156,11 @@ public class CubemanController : MonoBehaviour
 					}
                     if(Vector3.Distance(bones[i].transform.localPosition, posJoint) >= jitterFilterTresh)
                     {
-                        if(i==3)
+                        if(i==2)
+                        {
+
+                        }
+                        else if(i==3)
                         {
                             //Camera.main.transform.position = posJoint;
                             bones[i].transform.localPosition = posJoint;
