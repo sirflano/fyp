@@ -75,7 +75,7 @@ public class handsTest : MonoBehaviour {
                     Quaternion rot = gun.transform.rotation;
 
                     //gunPos = handPos + gun.transform.rotation * new Vector3(0, 0, 0.5f);// * -0.5f;
-                    Debug.Log(handPos + " Becomes " + gunPos);
+                    //Debug.Log(handPos + " Becomes " + gunPos);
                     gun.transform.localPosition = handPos;
                     //camera.transform.localPosition = headPos;
                     //gun.transform.rotation = angle;

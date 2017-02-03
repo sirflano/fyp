@@ -75,7 +75,7 @@ public class CubemanController : MonoBehaviour
 			}
 		}
 		
-		initialPosition = transform.position;
+		initialPosition = transform.localPosition;
 		initialRotation = transform.rotation;
 		transform.rotation = Quaternion.identity;
 	}
@@ -91,9 +91,9 @@ public class CubemanController : MonoBehaviour
 		if(playerID <= 0)
 		{
 			// reset the pointman position and rotation
-			if(transform.position != initialPosition)
+			if(transform.localPosition != initialPosition)
 			{
-				transform.position = initialPosition;
+				transform.localPosition = initialPosition;
 			}
 			
 			if(transform.rotation != initialRotation)
@@ -125,10 +125,10 @@ public class CubemanController : MonoBehaviour
 		if(initialPosUserID != playerID)
 		{
 			initialPosUserID = playerID;
-			initialPosOffset = transform.position - (MoveVertically ? posPointMan : new Vector3(posPointMan.x, 0, posPointMan.z));
+			initialPosOffset = transform.localPosition - (MoveVertically ? posPointMan : new Vector3(posPointMan.x, 0, posPointMan.z));
 		}
 		
-		transform.position = initialPosOffset + (MoveVertically ? posPointMan : new Vector3(posPointMan.x, 0, posPointMan.z));
+		transform.localPosition = initialPosOffset + (MoveVertically ? posPointMan : new Vector3(posPointMan.x, 0, posPointMan.z));
 
 		// update the local positions of the bones
 		for(int i = 0; i < bones.Length; i++) 
@@ -154,7 +154,7 @@ public class CubemanController : MonoBehaviour
 						posJoint.x = -posJoint.x;
 						posJoint.z = -posJoint.z;
 					}
-                    if(Vector3.Distance(bones[i].transform.localPosition, posJoint) >= jitterFilterTresh)
+                    /*if(Vector3.Distance(bones[i].transform.localPosition, posJoint) >= jitterFilterTresh)
                     {
                         if(i==2)
                         {
@@ -170,8 +170,22 @@ public class CubemanController : MonoBehaviour
 					        bones[i].transform.localPosition = posJoint;
 					        bones[i].transform.rotation = rotJoint;
                         }
+                    }*/
+                    if (i == 2)
+                    {
+
                     }
-				}
+                    else if (i == 3)
+                    {
+                        //Camera.main.transform.position = posJoint;
+                        bones[i].transform.localPosition = posJoint;
+                    }
+                    else
+                    {
+                        bones[i].transform.localPosition = posJoint;
+                        bones[i].transform.rotation = rotJoint;
+                    }
+                }
 				else
 				{
 					bones[i].gameObject.SetActive(false);
@@ -189,10 +203,10 @@ public class CubemanController : MonoBehaviour
 				{
 					if(bones[i].gameObject.activeSelf)
 					{
-						Vector3 posJoint = bones[i].transform.position;
+						Vector3 posJoint = bones[i].transform.localPosition;
 
 						int parI = parIdxs[i];
-						Vector3 posParent = bones[parI].transform.position;
+						Vector3 posParent = bones[parI].transform.localPosition;
 
 						if(bones[parI].gameObject.activeSelf)
 						{

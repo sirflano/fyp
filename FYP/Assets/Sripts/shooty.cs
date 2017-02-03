@@ -46,6 +46,7 @@ public class shooty : MonoBehaviour {
             curdown = cooldown;
         }
         transform.rotation = Quaternion.Euler(x, y, z);
+        //Debug.Log("GunRotation:" + transform.rotation);
         curdown -= 1 * Time.deltaTime;
     }
     void ProcessMessage(string message)

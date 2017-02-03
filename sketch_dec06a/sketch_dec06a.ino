@@ -42,20 +42,56 @@ void loop() {
   /* Display the floating point data */
   
   // if it is, the buttonState is HIGH:
-  if (buttonState == HIGH) {
-    // turn LED on:
-    Serial.print("H");
+  if(displayCalStatus()){
+    if (buttonState == HIGH) {
+      // turn LED on:
+      Serial.print("H");
+    }
+    else if(buttonState == LOW) {
+      Serial.print("L");
+    }
+    Serial.print(":");
+    Serial.print(event.orientation.x, 4);
+    Serial.print(":");
+    Serial.print(event.orientation.y, 4);
+    Serial.print(":");
+    Serial.print(event.orientation.z, 4);
+  
+    Serial.println("");
+    //delay(BNO055_SAMPLERATE_DELAY_MS);
   }
-  else if(buttonState == LOW) {
-    Serial.print("L");
-  }
-  Serial.print(":");
-  Serial.print(event.orientation.x, 4);
-  Serial.print(":");
-  Serial.print(event.orientation.y, 4);
-  Serial.print(":");
-  Serial.print(event.orientation.z, 4);
+}
 
-  Serial.println("");
-  //delay(BNO055_SAMPLERATE_DELAY_MS);
+bool displayCalStatus(void)
+{
+  /* Get the four calibration values (0..3) */
+  /* Any sensor data reporting 0 should be ignored, */
+  /* 3 means 'fully calibrated" */
+  uint8_t system, gyro, accel, mag;
+  system = gyro = accel = mag = 0;
+ 
+  bno.getCalibration(&system, &gyro, &accel, &mag);
+ 
+  /* The data should be ignored until the system calibration is > 0 */
+  Serial.print("\t");
+  if (!system)
+  {
+    Serial.print("! ");
+  }
+
+  if(gyro > 2 && accel > 2 && mag > 2 && system > 2){
+    return true;
+  }
+  else {
+    /* Display the individual values */
+    Serial.print("Sys:");
+    Serial.print(system, DEC);
+    Serial.print(" G:");
+    Serial.print(gyro, DEC);
+    Serial.print(" A:");
+    Serial.print(accel, DEC);
+    Serial.print(" M:");
+    Serial.println(mag, DEC);
+    return false;
+  }
 }
