@@ -45,7 +45,7 @@ public class blueprintGenerator : MonoBehaviour {
     {
 
     }
-
+    //public GameObject generate(float _minLength, float _)
     public blueprint.room generateRoom(blueprint.room toBeBuilt)
     {
         blueprint.tile[,] tiles = toBeBuilt.tiles;
