@@ -23,20 +23,22 @@ public class waypointMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
+        {
+            player.GetComponent<playerMove>().turnToTarget(transform.rotation);
+            /*if (!player.GetComponent<playerMove>().getTurning())
+            {
+                player.GetComponent<playerMove>().turnToTarget(transform.rotation);
+            }*/
+            turnPlayer = false;
+            playerTurned = true;
+        }
         if (active)
         {
-            if(turnPlayer || player.GetComponent<playerMove>().getTurning())
-            {   
-                if(!player.GetComponent<playerMove>().getTurning())
-                {
-                    player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-                }
-                turnPlayer = false;
-                playerTurned = true;
-            }
             
-            else
-            {
+            
+            //else
+            //{
                 if (fight)
                 {
                     if (timeFaught >= fightTimer)
@@ -61,7 +63,7 @@ public class waypointMovementController : MonoBehaviour
                     }
                     active = false;
                 }
-            }
+           // }
         }
 
 
