@@ -42,6 +42,8 @@ public class CubemanController : MonoBehaviour
 	private uint initialPosUserID = 0;
 
     public float jitterFilterTresh;
+
+    public Quaternion handsRot;
 	
 	
 	void Start () 
@@ -74,31 +76,33 @@ public class CubemanController : MonoBehaviour
 				lines[i].transform.parent = transform;
 			}
 		}
-		
-		initialPosition = transform.localPosition;
-		initialRotation = transform.rotation;
+
+        initialPosition = transform.localPosition;
+		initialRotation = transform.localRotation;
 		transform.rotation = Quaternion.identity;
+        UnityEngine.VR.InputTracking.Recenter();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
 		KinectManager manager = KinectManager.Instance;
-
+        
 		// get 1st player
 		uint playerID = manager != null ? manager.GetPlayer1ID() : 0;
 		
 		if(playerID <= 0)
 		{
+
 			// reset the pointman position and rotation
 			if(transform.localPosition != initialPosition)
 			{
 				transform.localPosition = initialPosition;
 			}
 			
-			if(transform.rotation != initialRotation)
+			if(transform.localRotation != initialRotation)
 			{
-				transform.rotation = initialRotation;
+				transform.localRotation = initialRotation;
 			}
 			
 			for(int i = 0; i < bones.Length; i++) 
@@ -106,7 +110,10 @@ public class CubemanController : MonoBehaviour
 				bones[i].gameObject.SetActive(true);
 				
 				bones[i].transform.localPosition = Vector3.zero;
-				bones[i].transform.localRotation = Quaternion.identity;
+                if(i!=3)
+                {
+				    bones[i].transform.localRotation = Quaternion.identity;
+                }
 				
 				if(SkeletonLine)
 				{
@@ -130,8 +137,10 @@ public class CubemanController : MonoBehaviour
 		
 		transform.localPosition = initialPosOffset + (MoveVertically ? posPointMan : new Vector3(posPointMan.x, 0, posPointMan.z));
 
-		// update the local positions of the bones
-		for(int i = 0; i < bones.Length; i++) 
+        // update the local positions of the bones
+        Vector3 leftHandPos = new Vector3(0,0,0);
+        Vector3 rightHandPos = new Vector3(0, 0, 0);
+        for (int i = 0; i < bones.Length; i++) 
 		{
 			if(bones[i] != null)
 			{
@@ -171,11 +180,7 @@ public class CubemanController : MonoBehaviour
 					        bones[i].transform.rotation = rotJoint;
                         }
                     }*/
-                    if (i == 2)
-                    {
-
-                    }
-                    else if (i == 3)
+                    if (i == 3)
                     {
                         //Camera.main.transform.position = posJoint;
                         bones[i].transform.localPosition = posJoint;
@@ -183,14 +188,28 @@ public class CubemanController : MonoBehaviour
                     else
                     {
                         bones[i].transform.localPosition = posJoint;
-                        bones[i].transform.rotation = rotJoint;
+                        bones[i].transform.localRotation = rotJoint;
+                    }
+
+                    if(i==7)
+                    {
+                        leftHandPos = posJoint;
+                    }
+                    if (i == 11)
+                    {
+                        rightHandPos = posJoint;
                     }
                 }
 				else
 				{
 					bones[i].gameObject.SetActive(false);
 				}
-			}	
+                GameObject tempHand = new GameObject();
+                tempHand.transform.position = rightHandPos;
+                tempHand.transform.LookAt(leftHandPos);
+                handsRot = tempHand.transform.localRotation;
+                //KinectHelper.VectorBetween(playerID, leftHandPos, rightHandPos);
+            }	
 		}
 
 		if(SkeletonLine)

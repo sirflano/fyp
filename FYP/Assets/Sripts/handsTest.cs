@@ -23,13 +23,17 @@ public class handsTest : MonoBehaviour {
     public float handYpos;
     public float handZPos;
     public float moveSpeed;
-	// Use this for initialization
-	void Start () {
+    private Quaternion gunRot;
+    private Vector3 handRot;
+    private float handsDist;
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        gunRot = gun.GetComponent<shooty>().currentAngle;
         if (kinectManager == null)
         {
             kinectManager = KinectManager.Instance;
@@ -38,13 +42,23 @@ public class handsTest : MonoBehaviour {
         {
             if (kinectManager.IsUserDetected())
             {
+                Vector3 handPos = new Vector3(0, 0, 0);
                 Vector3 playerPos = kinectManager.GetUserPosition(kinectManager.GetPlayer1ID());
                 //Vector3 handPos = kinectManager.GetJointLocalPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
                 //Vector3 headPos = kinectManager.GetJointLocalPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
                 Vector3 worldHandPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
                 Vector3 worldLeftHandPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
                 Vector3 worldHeadPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
-                Vector3 handPos = worldHandPos - playerPos;
+                if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight))
+                {
+                    handPos = worldHandPos - playerPos;
+
+                }
+                else
+                {
+                    Vector3 tempHandPos = worldLeftHandPos - playerPos;
+                    handPos = gunRot * tempHandPos * handsDist;
+                }
                 Vector3 leftHandPos = worldLeftHandPos - playerPos;
                 //Vector3 headPos = worldHeadPos - playerPos;
                 //handPos.x = handPos.x;
@@ -60,6 +74,13 @@ public class handsTest : MonoBehaviour {
                 handXpos = handPos.x;
                 handYpos = handPos.y;
 
+                if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft))
+                {
+                    handsDist = Vector3.Distance(leftHandPos, handPos);
+                    handRot = kinectManager.GetDirectionBetweenJoints(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight, true, false);
+                    oldPos = handPos;
+                }
+
                 if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head))
                 {
                     //Quaternion angle = new Quaternion();
@@ -74,7 +95,9 @@ public class handsTest : MonoBehaviour {
                     //Vector3 gunPos = angle * handPos;
                     Quaternion rot = gun.transform.rotation;
 
-                    //gunPos = handPos + gun.transform.rotation * new Vector3(0, 0, 0.5f);// * -0.5f;
+                    gunPos = new Vector3(0,0,0) + (gun.transform.rotation * new Vector3(0, 0, -gun.GetComponent<MeshFilter>().mesh.bounds.extents.z));// * -0.5f;
+                    gunPos.y = -gunPos.y;
+                    handPos = handPos + gunPos;
                     //Debug.Log(handPos + " Becomes " + gunPos);
                     gun.transform.localPosition = handPos;
                     //camera.transform.localPosition = headPos;

@@ -21,7 +21,21 @@ public class playerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moving)
+        if (turning)
+        {
+            if (Quaternion.Angle(transform.rotation, targetRot) >= 1.0)
+            {
+                //Debug.Log("Turn Remaining:" + Quaternion.Angle(transform.rotation, targetRot));
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+            }
+            else
+            {
+                transform.rotation = targetRot;
+                turning = false;
+            }
+        }
+        
+        else if (moving)
         {
             if (Vector3.Distance(transform.position, target.transform.position) <= (speed * Time.deltaTime))
             {
@@ -34,20 +48,7 @@ public class playerMove : MonoBehaviour
                 transform.position += movement * speed * Time.deltaTime;
             }
 
-            
-        }
-        else if (turning)
-        {
-            if (Quaternion.Angle(transform.rotation, targetRot) >= 1.0)
-            {
-                Debug.Log("Turn Remaining:" + Quaternion.Angle(transform.rotation, targetRot));
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
-            }
-            else
-            {
-                transform.rotation = targetRot;
-                turning = false;
-            }
+
         }
     }
 

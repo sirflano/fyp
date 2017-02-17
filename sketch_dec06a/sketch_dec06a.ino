@@ -42,14 +42,15 @@ void loop() {
   /* Display the floating point data */
   
   // if it is, the buttonState is HIGH:
-  if(displayCalStatus()){
-    if (buttonState == HIGH) {
+  if (buttonState == HIGH) {
       // turn LED on:
       Serial.print("H");
     }
     else if(buttonState == LOW) {
       Serial.print("L");
     }
+  if(displayCalStatus()){
+    
     Serial.print(":");
     Serial.print(event.orientation.x, 4);
     Serial.print(":");
@@ -59,6 +60,9 @@ void loop() {
   
     Serial.println("");
     //delay(BNO055_SAMPLERATE_DELAY_MS);
+  }
+  else {
+    
   }
 }
 
@@ -79,19 +83,21 @@ bool displayCalStatus(void)
     Serial.print("! ");
   }
 
-  if(gyro > 2 && accel > 2 && mag > 2 && system > 2){
+  if(gyro > 1 && accel > 1 && mag > 1 && system > 2){
     return true;
   }
   else {
     /* Display the individual values */
-    Serial.print("Sys:");
+    Serial.print(":NotConfigured");
+    Serial.print(":");
     Serial.print(system, DEC);
-    Serial.print(" G:");
+    Serial.print(":");
     Serial.print(gyro, DEC);
-    Serial.print(" A:");
+    Serial.print(":");
     Serial.print(accel, DEC);
-    Serial.print(" M:");
+    Serial.print(":");
     Serial.println(mag, DEC);
+    Serial.println("");
     return false;
   }
 }

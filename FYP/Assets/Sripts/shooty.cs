@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO.Ports;
 using System.Threading;
+using UnityEngine.UI;
 
 public class shooty : MonoBehaviour {
 
@@ -14,12 +15,20 @@ public class shooty : MonoBehaviour {
     private float x;
     private float y;
     private float z;
+    private float initX;
+    private float initY;
+    private float initZ;
+    private bool gunCalibrated = true;
+    //private Quaternion handRot;
 
     public bool Connected = false;
     public string portName = "COM3";
 
     public volatile float pot;
     public volatile bool button;
+    public Text displayString;
+    public GameObject player;
+    public Quaternion currentAngle;
     
 
     float scale = 1.0f;
@@ -35,8 +44,10 @@ public class shooty : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
         if (button && curdown <= 0)
         {
+            
             GameObject bullet = Instantiate(bul, transform.position, transform.rotation) as GameObject;
             curdown = cooldown;
         }
@@ -45,9 +56,20 @@ public class shooty : MonoBehaviour {
             GameObject bullet = Instantiate(bul, transform.position, transform.rotation) as GameObject;
             curdown = cooldown;
         }
-        transform.rotation = Quaternion.Euler(x, y, z);
-        //Debug.Log("GunRotation:" + transform.rotation);
-        curdown -= 1 * Time.deltaTime;
+        if(gunCalibrated)
+        {
+            Time.timeScale = 1;
+            //transform.localRotation = Quaternion.Euler(-x, y, z);
+            transform.localRotation = Quaternion.Euler(x, -y, z);
+            currentAngle = transform.localRotation;
+           // Debug.Log("GunRotation:" + transform.localRotation);
+            curdown -= 1 * Time.deltaTime;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+        //transform.rotation = Quaternion.Euler(x, y, z);
     }
     void ProcessMessage(string message)
     {
@@ -56,6 +78,7 @@ public class shooty : MonoBehaviour {
         switch (decoded[0])
         {
             case "H":
+                Debug.Log("FIRE");
                 button = true;
                 break;
             case "L":
@@ -63,9 +86,28 @@ public class shooty : MonoBehaviour {
                 break;
         }
         //print(message);
-        y = float.Parse(decoded[1]);
-        x = float.Parse(decoded[2]);
-        z = float.Parse(decoded[3]);
+            //Debug.Log(message);
+        if(decoded[1] == "NotConfigured")
+        {
+            gunCalibrated = false;
+            displayString.text = message;
+            Debug.Log(message);
+        }
+        else
+        {
+            if(!gunCalibrated)
+            {
+                gunCalibrated = true;
+                //handRot = player.GetComponent<CubemanController>().handsRot;
+                initY = float.Parse(decoded[1]);
+                initX = float.Parse(decoded[2]);
+                initZ = float.Parse(decoded[3]);
+            }
+            displayString.text = "";
+            y = initY - float.Parse(decoded[1]);
+            x = initX - float.Parse(decoded[2]);
+            z = initZ - float.Parse(decoded[3]);
+        }
 
         //transform.rotation = Quaternion.Euler(float.Parse(decoded[1]), float.Parse(decoded[2]), float.Parse(decoded[3]));
         /*

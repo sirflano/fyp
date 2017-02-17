@@ -71,7 +71,7 @@ public class waypointMovementController : MonoBehaviour
 
     private void OnTriggerEnter()
     {
-        Debug.Log("Collided");
+        //Debug.Log("Collided");
         if(playerTurned)
         {
             turnPlayer = true;
