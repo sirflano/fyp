@@ -7,10 +7,12 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 
-public class handsTest : MonoBehaviour {
+public class handsTest : MonoBehaviour
+{
 
     protected KinectManager kinectManager;
     public GameObject gun;
+
     //public GameObject camera;
     private Vector3 oldPos;
     private Vector3 gunPos;
@@ -27,12 +29,14 @@ public class handsTest : MonoBehaviour {
     private Vector3 handRot;
     private float handsDist;
     // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         gunRot = gun.GetComponent<shooty>().currentAngle;
         if (kinectManager == null)
         {
@@ -93,10 +97,10 @@ public class handsTest : MonoBehaviour {
                     //zpos = angle.z;
                     //angle.SetEulerAngles(xpos, ypos, zpos);
                     //Vector3 gunPos = angle * handPos;
-                    Quaternion rot = gun.transform.rotation;
+                    Quaternion rot = gun.transform.localRotation;
 
-                    gunPos = new Vector3(0,0,0) + (gun.transform.rotation * new Vector3(0, 0, -gun.GetComponent<MeshFilter>().mesh.bounds.extents.z));// * -0.5f;
-                    gunPos.y = -gunPos.y;
+                    gunPos = new Vector3(0, 0, 0) + (rot * new Vector3(0, gun.GetComponent<MeshFilter>().mesh.bounds.extents.y * 0.2f, -gun.GetComponent<MeshFilter>().mesh.bounds.extents.z * 0.4f));// * -0.5f;
+                    //gunPos.y = -gunPos.y;
                     handPos = handPos + gunPos;
                     //Debug.Log(handPos + " Becomes " + gunPos);
                     gun.transform.localPosition = handPos;

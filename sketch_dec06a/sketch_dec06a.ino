@@ -1,3 +1,4 @@
+
 // constants won't change. They're used here to
 // set pin numbers:
 #include <Wire.h>
@@ -7,9 +8,11 @@
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
-const int buttonPin = 2;     // the number of the pushbutton pin
+const int buttonPin = 12;     // the number of the pushbutton pin
 const int ledPin =  13;      // the number of the LED pin
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
+bool calibrated = false;
+bool released = false;
 
 // variables will change:
 int buttonState = 0;         // variable for reading the pushbutton status
@@ -42,31 +45,33 @@ void loop() {
   /* Display the floating point data */
   
   // if it is, the buttonState is HIGH:
-  if (buttonState == HIGH) {
-      // turn LED on:
-      Serial.print("H");
-    }
-    else if(buttonState == LOW) {
-      Serial.print("L");
-    }
-  if(displayCalStatus()){
+  
+  if(calibrated){
     
-    Serial.print(":");
+    //Serial.print(":");
     Serial.print(event.orientation.x, 4);
     Serial.print(":");
     Serial.print(event.orientation.y, 4);
     Serial.print(":");
     Serial.print(event.orientation.z, 4);
-  
+
+    if (buttonState == LOW) {
+      released = true;
+    }
+    if (buttonState == HIGH && released) {
+      // turn LED on:
+      Serial.print(":H");
+      released = false;
+    }
     Serial.println("");
     //delay(BNO055_SAMPLERATE_DELAY_MS);
   }
   else {
-    
+    displayCalStatus();
   }
 }
 
-bool displayCalStatus(void)
+void displayCalStatus(void)
 {
   /* Get the four calibration values (0..3) */
   /* Any sensor data reporting 0 should be ignored, */
@@ -77,14 +82,14 @@ bool displayCalStatus(void)
   bno.getCalibration(&system, &gyro, &accel, &mag);
  
   /* The data should be ignored until the system calibration is > 0 */
-  Serial.print("\t");
-  if (!system)
-  {
+  //Serial.print("\t");
+  if (!system){
     Serial.print("! ");
   }
 
-  if(gyro > 1 && accel > 1 && mag > 1 && system > 2){
-    return true;
+
+  if(gyro > 2 && accel > 2 && mag > 2 && system > 2){
+    calibrated = true;
   }
   else {
     /* Display the individual values */
@@ -98,6 +103,5 @@ bool displayCalStatus(void)
     Serial.print(":");
     Serial.println(mag, DEC);
     Serial.println("");
-    return false;
   }
 }
