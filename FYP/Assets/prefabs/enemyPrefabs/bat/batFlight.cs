@@ -9,7 +9,7 @@ public class batFlight : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        target = GameObject.FindGameObjectWithTag("enemyTarget");
 	}
 	
 	// Update is called once per frame

@@ -13,6 +13,7 @@ public class waypointMovementController : MonoBehaviour
     public bool turnPlayer;
     private bool playerTurned = false;
     private float timeFaught = 0;
+    private bool completed = false;
     // Use this for initialization
     void Start()
     {
@@ -62,6 +63,7 @@ public class waypointMovementController : MonoBehaviour
                         player.GetComponent<playerMove>().endMovement();
                     }
                     active = false;
+                    completed = true;
                 }
            // }
         }
@@ -69,16 +71,22 @@ public class waypointMovementController : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("Collided");
-        if(playerTurned)
+        if(other.gameObject.layer == 11)
         {
-            turnPlayer = true;
-            playerTurned = false;
+            if (!completed)
+            {
+                if(playerTurned)
+                {
+                    turnPlayer = true;
+                    playerTurned = false;
+                }
+                timeFaught = 0;
+                active = true;
+            }
         }
-        timeFaught = 0;
-        active = true;
     }
 
 }

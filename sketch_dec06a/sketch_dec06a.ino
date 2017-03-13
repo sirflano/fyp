@@ -54,6 +54,8 @@ void loop() {
     Serial.print(event.orientation.y, 4);
     Serial.print(":");
     Serial.print(event.orientation.z, 4);
+    Serial.print(":");
+    Serial.print(event.orientation, 4);
 
     if (buttonState == LOW) {
       released = true;

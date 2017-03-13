@@ -15,7 +15,7 @@ public class playerMove : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        Object.DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
@@ -77,5 +77,13 @@ public class playerMove : MonoBehaviour
         target = null;
         turning = false;
         moving = false;
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        //turning = false;
+        moving = false;
+        transform.rotation = new Quaternion(0, 0, 0, 1);
+        transform.position = new Vector3(0, 0, 0);
     }
 }

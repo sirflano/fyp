@@ -25,9 +25,12 @@ public class handsTest : MonoBehaviour
     public float handYpos;
     public float handZPos;
     public float moveSpeed;
+    public bool leftHanded = false;
+    public bool handSelected = false;
     private Quaternion gunRot;
-    private Vector3 handRot;
+    //private Vector3 handRot;
     private float handsDist;
+    private Vector3 standardPos = new Vector3(0, -100, 0);
     // Use this for initialization
     void Start()
     {
@@ -53,17 +56,14 @@ public class handsTest : MonoBehaviour
                 Vector3 worldHandPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight);
                 Vector3 worldLeftHandPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft);
                 Vector3 worldHeadPos = kinectManager.GetJointPosition(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head);
-                if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight))
+                if(leftHanded)
                 {
-                    handPos = worldHandPos - playerPos;
-
+                    handPos = worldLeftHandPos - playerPos;
                 }
                 else
                 {
-                    Vector3 tempHandPos = worldLeftHandPos - playerPos;
-                    handPos = gunRot * tempHandPos * handsDist;
+                    handPos = worldHandPos - playerPos;
                 }
-                Vector3 leftHandPos = worldLeftHandPos - playerPos;
                 //Vector3 headPos = worldHeadPos - playerPos;
                 //handPos.x = handPos.x;
                 //handPos.y = -handPos.y;
@@ -78,39 +78,46 @@ public class handsTest : MonoBehaviour
                 handXpos = handPos.x;
                 handYpos = handPos.y;
 
-                if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft))
+                /*if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft))
                 {
                     handsDist = Vector3.Distance(leftHandPos, handPos);
-                    handRot = kinectManager.GetDirectionBetweenJoints(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight, true, false);
+                    //handRot = kinectManager.GetDirectionBetweenJoints(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandLeft, (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight, true, false);
                     oldPos = handPos;
-                }
+                }*/
 
-                if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head))
+                if(handSelected)
                 {
-                    //Quaternion angle = new Quaternion();
-                    //angle.SetFromToRotation(handPos, leftHandPos);
-                    //angle.SetLookRotation(worldHandPos - worldLeftHandPos);
+                    if (kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.HandRight) && kinectManager.IsJointTracked(kinectManager.GetPlayer1ID(), (int)KinectWrapper.NuiSkeletonPositionIndex.Head))
+                    {
+                        //Quaternion angle = new Quaternion();
+                        //angle.SetFromToRotation(handPos, leftHandPos);
+                        //angle.SetLookRotation(worldHandPos - worldLeftHandPos);
 
-                    //angle.x = angle.x * -1;
-                    //xpos = angle.x;
-                    //ypos = angle.y;
-                    //zpos = angle.z;
-                    //angle.SetEulerAngles(xpos, ypos, zpos);
-                    //Vector3 gunPos = angle * handPos;
-                    Quaternion rot = gun.transform.localRotation;
+                        //angle.x = angle.x * -1;
+                        //xpos = angle.x;
+                        //ypos = angle.y;
+                        //zpos = angle.z;
+                        //angle.SetEulerAngles(xpos, ypos, zpos);
+                        //Vector3 gunPos = angle * handPos;
+                        Quaternion rot = gun.transform.localRotation;
 
-                    gunPos = new Vector3(0, 0, 0) + (rot * new Vector3(0, gun.GetComponent<MeshFilter>().mesh.bounds.extents.y * 0.2f, -gun.GetComponent<MeshFilter>().mesh.bounds.extents.z * 0.4f));// * -0.5f;
-                    //gunPos.y = -gunPos.y;
-                    handPos = handPos + gunPos;
-                    //Debug.Log(handPos + " Becomes " + gunPos);
-                    gun.transform.localPosition = handPos;
-                    //camera.transform.localPosition = headPos;
-                    //gun.transform.rotation = angle;
-                    oldPos = handPos;
+                        gunPos = new Vector3(0, 0, 0) + (rot * new Vector3(0, gun.GetComponent<MeshFilter>().mesh.bounds.extents.y * 0.2f, -gun.GetComponent<MeshFilter>().mesh.bounds.extents.z * 0.4f));// * -0.5f;
+                        //gunPos.y = -gunPos.y;
+                        handPos = handPos + gunPos;
+                        //Debug.Log(handPos + " Becomes " + gunPos);
+                        gun.transform.localPosition = handPos;
+                        //camera.transform.localPosition = headPos;
+                        //gun.transform.rotation = angle;
+                        oldPos = handPos;
+                    }
+                    else
+                    {
+                        gun.transform.localPosition = oldPos;
+                    }
                 }
                 else
                 {
-                    gun.transform.localPosition = oldPos;
+                    gun.transform.localPosition = standardPos;
                 }
             }
         }

@@ -18,7 +18,7 @@ public class shooty : MonoBehaviour {
     private float initX = 0;
     private float initY = 0;
     private float initZ = 0;
-    private bool gunCalibrated = true;
+    public bool gunCalibrated = false;
     private string calibarionString = "";
     //private Quaternion handRot;
 
@@ -28,9 +28,12 @@ public class shooty : MonoBehaviour {
     public volatile float pot;
     public volatile bool button;
     public Text displayString;
+    public Image bullets;
     public GameObject player;
     public Quaternion currentAngle;
-    
+
+    private float maxBullets = 5;
+    private float curBullets;
 
     float scale = 1.0f;
 	// Use this for initialization
@@ -41,31 +44,33 @@ public class shooty : MonoBehaviour {
         runThread = true;
         Thread ThreadForController = new Thread(new ThreadStart(ThreadWorker));
         ThreadForController.Start();
+        curBullets = maxBullets;
     }
 	
 	// Update is called once per frame
 	void Update () {
         displayString.text = calibarionString;
+        bullets.fillAmount = curBullets / maxBullets;
         curdown = curdown - 1 * Time.deltaTime;
         if (button && curdown <= 0)
         {
-            
-            GameObject bullet = Instantiate(bul, transform.position, transform.rotation) as GameObject;
-            curdown = cooldown;
+            if(curBullets > 0)
+            {
+                Instantiate(bul, transform.position, transform.rotation);
+                curdown = cooldown;
+                curBullets -= 1;
+            }
             button = false;
         }
         else if(Input.GetKeyDown("space") && curdown <=0)
         {
-            GameObject bullet = Instantiate(bul, transform.position, transform.rotation) as GameObject;
+            Instantiate(bul, transform.position, transform.rotation);
             curdown = cooldown;
-        }
-        else if(Input.GetKeyDown("space") || button) {
-            Debug.Log("Fire!");
         }
         if(gunCalibrated)
         {
             Time.timeScale = 1;
-            //transform.localRotation = Quaternion.Euler(-x, y, z);
+            //transform.localRotation = Quaternion.Euler(-x, -y, -z);
             transform.localRotation = Quaternion.Euler(-x, -y, -z);
             currentAngle = transform.localRotation;
            // Debug.Log("GunRotation:" + transform.localRotation);
@@ -80,6 +85,7 @@ public class shooty : MonoBehaviour {
     void ProcessMessage(string message)
     {
         string[] decoded = message.Split(':');
+        //Debug.Log(message);
         //float value = float.Parse(decoded[1]);
         /*switch (decoded[0])
         {
@@ -92,12 +98,12 @@ public class shooty : MonoBehaviour {
                 break;
         }*/
         //print(message);
-            //Debug.Log(message);
-        if(decoded[1] == "NotConfigured")
+        //Debug.Log(message);
+        if (decoded[1] == "NotConfigured")
         {
             gunCalibrated = false;
             calibarionString = message;
-            Debug.Log(message);
+            //Debug.Log(message);
         }
         else
         {
@@ -108,9 +114,9 @@ public class shooty : MonoBehaviour {
                 //handRot = player.GetComponent<CubemanController>().handsRot;
                 //if(initX == 0 && initY == 0 && initZ == 0)
                 //{
-                    initY = float.Parse(decoded[1]);
-                    initX = float.Parse(decoded[2]);
-                    initZ = float.Parse(decoded[3]);
+                    initY = float.Parse(decoded[0]);
+                    //initX = float.Parse(decoded[2]);
+                    //initZ = float.Parse(decoded[3]);
                 //}
                 //else
                 //{
@@ -119,7 +125,7 @@ public class shooty : MonoBehaviour {
                 //    initZ = z;
                 //}
             }
-            Debug.Log(message);
+            //Debug.Log(message);
             calibarionString = "";
             /*if(initX - float.Parse(decoded[2]) > 180.0f || initX - float.Parse(decoded[2]) < -180)
             {
@@ -147,8 +153,21 @@ public class shooty : MonoBehaviour {
             }*/
 
             x = initX - float.Parse(decoded[2]);
-            y = initY - float.Parse(decoded[0]);
+            y = (initY - float.Parse(decoded[0]) - 180) % 360;
             z = initZ - float.Parse(decoded[1]);
+            //x = initX - float.Parse(decoded[2]) % 360;
+            /*if(initX - float.Parse(decoded[2]) < 0)
+            {
+                x = 360 - initX - float.Parse(decoded[2]);
+            }
+            else
+            {
+                x = initX - float.Parse(decoded[2]);
+            }
+            x = float.Parse(decoded[2]);
+            y = float.Parse(decoded[0]);
+            z = float.Parse(decoded[1]);*/
+            //calibarionString = "    "+initY+"    "+y.ToString();
             if (decoded.Length > 3)
             {
                 button = true;
@@ -217,6 +236,14 @@ public class shooty : MonoBehaviour {
             controller = new SerialPort(portName, 9600);
             controller.ReadTimeout = 100;
             controller.Open();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == 13)
+        {
+            curBullets = maxBullets;
         }
     }
 }
