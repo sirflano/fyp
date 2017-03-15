@@ -1,6 +1,10 @@
 sceneSetups:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 - path: Assets/scenes/procGenTesting.unity
+=======
+- path: Assets/scenes/mainMenu.unity
+>>>>>>> Stashed changes
 =======
 - path: Assets/scenes/mainMenu.unity
 >>>>>>> Stashed changes
