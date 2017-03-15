@@ -7,15 +7,18 @@ public class splodeyParent : MonoBehaviour {
     public float deathCry;
     private bool splodey = false;
     private float splodeTime = 0;
+    private Animator anim;
+
 	// Use this for initialization
 	void Start () {
-	
+        anim = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	    if(splodey)
         {
+            anim.SetBool("dead", true);
             splodeTime += 1 * Time.deltaTime;
             if(splodeTime >= deathCry)
             {
