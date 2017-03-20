@@ -84,6 +84,6 @@ public class playerMove : MonoBehaviour
         //turning = false;
         moving = false;
         transform.rotation = new Quaternion(0, 0, 0, 1);
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(4.5f, -23, 0);
     }
 }
