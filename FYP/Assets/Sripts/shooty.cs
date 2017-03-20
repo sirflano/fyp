@@ -29,6 +29,7 @@ public class shooty : MonoBehaviour {
     public volatile bool button;
     public Text displayString;
     public Image bullets;
+    public Image bullets2;
     public GameObject player;
     public Quaternion currentAngle;
 
@@ -51,6 +52,7 @@ public class shooty : MonoBehaviour {
 	void Update () {
         displayString.text = calibarionString;
         bullets.fillAmount = curBullets / maxBullets;
+        bullets2.fillAmount = curBullets / maxBullets;
         curdown = curdown - 1 * Time.deltaTime;
         if (button && curdown <= 0)
         {
@@ -59,6 +61,7 @@ public class shooty : MonoBehaviour {
                 Instantiate(bul, transform.position, transform.rotation);
                 curdown = cooldown;
                 curBullets -= 1;
+                controller.Write("1");
             }
             button = false;
         }

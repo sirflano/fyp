@@ -8,7 +8,7 @@ public class playerMove : MonoBehaviour
     public float speed = 1;
     public float turnSpeed = 1;
     private Vector3 movement;
-    private GameObject target;
+    public GameObject target;
     private bool moving = false;
     private bool turning = false;
     private Quaternion targetRot;
@@ -65,7 +65,7 @@ public class playerMove : MonoBehaviour
 
     public void moveToTarget(GameObject _target)
     {
-        //Debug.Log("moveToTargetCalled");
+        Debug.Log("moveToTargetCalled");
         movement = _target.transform.position - transform.position;
         movement = Vector3.Normalize(movement);
         target = _target;

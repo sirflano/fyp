@@ -13,7 +13,7 @@ public class waypointMovementController : MonoBehaviour
     public bool turnPlayer;
     private bool playerTurned = false;
     private float timeFaught = 0;
-    private bool completed = false;
+    public bool completed = false;
     // Use this for initialization
     void Start()
     {
@@ -24,22 +24,24 @@ public class waypointMovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
+        if (player != null)
         {
-            player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-            /*if (!player.GetComponent<playerMove>().getTurning())
+            if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
             {
                 player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-            }*/
-            turnPlayer = false;
-            playerTurned = true;
-        }
-        if (active)
-        {
-            
-            
-            //else
-            //{
+                /*if (!player.GetComponent<playerMove>().getTurning())
+                {
+                    player.GetComponent<playerMove>().turnToTarget(transform.rotation);
+                }*/
+                turnPlayer = false;
+                playerTurned = true;
+            }
+            if (active)
+            {
+                Debug.Log("Active is true");
+
+                //else
+                //{
                 if (fight)
                 {
                     if (timeFaught >= fightTimer)
@@ -54,9 +56,11 @@ public class waypointMovementController : MonoBehaviour
                 }
                 else
                 {
-                    if(target != null)
+                    if (target != null)
                     {
+                        Debug.Log("trying to call");
                         player.GetComponent<playerMove>().moveToTarget(target);
+                        Debug.Log("called");
                     }
                     else
                     {
@@ -65,10 +69,15 @@ public class waypointMovementController : MonoBehaviour
                     active = false;
                     completed = true;
                 }
-           // }
+                // }
+            }
+
         }
+    }
 
-
+    public bool isCompleted()
+    {
+        return completed;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -89,4 +98,8 @@ public class waypointMovementController : MonoBehaviour
         }
     }
 
+    public void setTarget(GameObject _target)
+    {
+        target = _target;
+    }
 }

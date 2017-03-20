@@ -5,6 +5,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
+#include <Servo.h>
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
@@ -13,10 +14,15 @@ const int ledPin =  13;      // the number of the LED pin
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 bool calibrated = false;
 bool released = false;
-
+bool spin = false;
+bool spinTurn = true;
+int turnAmount = 60;
+int curTurn = turnAmount;
 // variables will change:
 int buttonState = 0;         // variable for reading the pushbutton status
+Servo myservo;
 
+int pos = 0;
 void setup() {
   // initialize the LED pin as an output:
   // initialize the pushbutton pin as an input:
@@ -28,6 +34,7 @@ void setup() {
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     while(1);
   }
+  myservo.attach(9);
   
   delay(1000);
     
@@ -38,13 +45,23 @@ void loop() {
   // read the state of the pushbutton value:
   buttonState = digitalRead(buttonPin);
 
+  if(Serial.read() >= 0) {
+    spin = true;
+  }
   // check if the pushbutton is pressed.
     sensors_event_t event; 
   bno.getEvent(&event);
-  
-  /* Display the floating point data */
-  
-  // if it is, the buttonState is HIGH:
+
+  if(spin && !spinTurn) {
+    myservo.write(0);
+    spinTurn = true;
+    spin = false;
+  }
+  else if(spin) {
+    myservo.write(turnAmount);
+    spinTurn = false;
+    spin = false;
+  }
   
   if(calibrated){
     
@@ -54,8 +71,6 @@ void loop() {
     Serial.print(event.orientation.y, 4);
     Serial.print(":");
     Serial.print(event.orientation.z, 4);
-    Serial.print(":");
-    Serial.print(event.orientation, 4);
 
     if (buttonState == LOW) {
       released = true;
