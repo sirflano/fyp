@@ -16,10 +16,39 @@ public class levelBuilder : MonoBehaviour {
     private Vector3 tempOutDoor;
     private Quaternion curOutDoorRot;
     private Quaternion tempOutDoorRot;
+    public float enemiesToSpawn = 3;
 
 
 	// Use this for initialization
 	void Start () {
+        initLevel();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
+    private void clearLevel()
+    {
+        if(curRooms.Count >= 1)
+        {
+            for(int i = curRooms.Count -1; i >= 0; i--)
+            {
+                Object.Destroy(curRooms[i]);
+            }
+        }
+        if (tempRooms.Count >= 1)
+        {
+            for (int i = tempRooms.Count - 1; i >= 0; i--)
+            {
+                Object.Destroy(tempRooms[i]);
+            }
+        }
+    }
+
+    private void initLevel()
+    {
         curRooms = new List<GameObject>();
         tempRooms = new List<GameObject>();
         curRooms.Add(Instantiate(startRoom, new Vector3(0, 0, 0), new Quaternion()));
@@ -28,12 +57,7 @@ public class levelBuilder : MonoBehaviour {
         curOutDoorRot = curRooms[0].GetComponent<roomController>().getOutDoorRot();
         //Debug.Log("outDoorPos:" + curOutDoor + " outDoorRot:" + curOutDoorRot);
         StartCoroutine(trackRooms());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
 
     IEnumerator trackRooms()
     {
@@ -64,7 +88,7 @@ public class levelBuilder : MonoBehaviour {
                 curRooms.Remove(curRooms[0]);
                 spawnRoom = true;
             }
-            else if(curRooms.Count<=5)
+            else if(curRooms.Count<=3)
             {
                 spawnRoom = true;
             }
@@ -106,9 +130,10 @@ public class levelBuilder : MonoBehaviour {
         Vector3 spawnPos = (nextRoomRot * (-posRelToInDoor + tempOutDoor)) + curRooms[curRooms.Count - 1].GetComponent<roomController>().getRoomPos();
         tempRooms.Add(Instantiate(rooms[roomToSpawn], spawnPos, nextRoomRot));
         curRooms[curRooms.Count - 1].GetComponent<roomController>().setNextWaypoint(tempRooms[tempRooms.Count - 1].GetComponent<roomController>().getFirstWatpoint());
-        tempRooms[tempRooms.Count - 1].GetComponent<enemySpawner>().spawnEnemies(20.0f);
+        tempRooms[tempRooms.Count - 1].GetComponent<enemySpawner>().spawnEnemies(enemiesToSpawn);
         curOutDoor = tempRooms[tempRooms.Count - 1].GetComponent<roomController>().getOutDoorPos();
         curOutDoorRot = tempRooms[tempRooms.Count - 1].GetComponent<roomController>().getOutDoorRot();
+        enemiesToSpawn += 2;
         spawnRoom = false;
     }
     private void placeCorridor()

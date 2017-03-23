@@ -27,6 +27,7 @@ public class playerMove : MonoBehaviour
             {
                 //Debug.Log("Turn Remaining:" + Quaternion.Angle(transform.rotation, targetRot));
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, turnSpeed * Time.deltaTime);
+                //transform.LookAt(target.GetComponent<waypointMovementController>().target.transform);
             }
             else
             {
@@ -57,10 +58,18 @@ public class playerMove : MonoBehaviour
         return turning;
     }
 
-    public void turnToTarget(Quaternion _targetRot)
+    public void turnToTarget(Vector3 targetTransform)
     {
         turning = true;
-        targetRot = _targetRot;
+        Vector3 direction = targetTransform - transform.position;
+        //targetRot = _targetRot;
+        //targetRot = Quaternion.FromToRotation(transform.forward, direction);
+        targetRot = Quaternion.LookRotation(target.transform.position);
+        Vector3 targetRotVec = targetRot.eulerAngles;
+        targetRotVec.x = transform.rotation.eulerAngles.x;
+        targetRotVec.z = transform.rotation.eulerAngles.z;
+        targetRot = Quaternion.Euler(targetRotVec);
+        targetRot = targetRot * Quaternion.Euler(new Vector3(0, 180, 0));
     }
 
     public void moveToTarget(GameObject _target)
@@ -74,9 +83,14 @@ public class playerMove : MonoBehaviour
 
     public void endMovement()
     {
-        target = null;
+        //target = null;
         turning = false;
         moving = false;
+    }
+
+    public GameObject getCurrentRoom()
+    {
+        return target.transform.parent.gameObject;
     }
 
     private void OnLevelWasLoaded(int level)

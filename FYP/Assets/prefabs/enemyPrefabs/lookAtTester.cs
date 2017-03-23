@@ -13,7 +13,7 @@ public class lookAtTester : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(Vector3.Distance(transform.position, target.transform.position) <= maxDist)
+        if(target.transform.parent.gameObject.GetComponent<playerMove>().getCurrentRoom() == transform.root.gameObject)
         transform.LookAt(target.transform);
 	}
 }

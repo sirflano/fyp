@@ -26,41 +26,38 @@ public class waypointMovementController : MonoBehaviour
     {
         if (player != null)
         {
-            if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
-            {
-                player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-                /*if (!player.GetComponent<playerMove>().getTurning())
-                {
-                    player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-                }*/
-                turnPlayer = false;
-                playerTurned = true;
-            }
+            
             if (active)
             {
-                Debug.Log("Active is true");
+                // Debug.Log("Active is true");
 
                 //else
                 //{
-                if (fight)
+                if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
                 {
-                    if (timeFaught >= fightTimer)
+                    //player.GetComponent<playerMove>().turnToTarget(transform.rotation);
+                    player.GetComponent<playerMove>().turnToTarget(target.transform.position);
+                    /*if (!player.GetComponent<playerMove>().getTurning())
                     {
-                        timeFaught = 0;
+                        player.GetComponent<playerMove>().turnToTarget(transform.rotation);
+                    }*/
+                    turnPlayer = false;
+                    playerTurned = true;
+                }
+                else if (fight)
+                {
+                    if (transform.parent.gameObject.GetComponent<enemySpawner>().isRoomCleared())
+                    {
                         fight = false;
-                    }
-                    else
-                    {
-                        timeFaught += Time.deltaTime;
                     }
                 }
                 else
                 {
                     if (target != null)
                     {
-                        Debug.Log("trying to call");
+                        //Debug.Log("trying to call");
                         player.GetComponent<playerMove>().moveToTarget(target);
-                        Debug.Log("called");
+                        //Debug.Log("called");
                     }
                     else
                     {
@@ -87,11 +84,11 @@ public class waypointMovementController : MonoBehaviour
         {
             if (!completed)
             {
-                if(playerTurned)
-                {
-                    turnPlayer = true;
-                    playerTurned = false;
-                }
+                //if(playerTurned)
+                //{
+                //    turnPlayer = true;
+                //    playerTurned = false;
+                //}
                 timeFaught = 0;
                 active = true;
             }

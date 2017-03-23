@@ -25,7 +25,7 @@ public class barSpawner : MonoBehaviour {
         }
         else
         {
-		    if(curdown <= 0 && Vector3.Distance(transform.position, target.transform.position) <= maxDist)
+		    if(target.transform.parent.gameObject.GetComponent<playerMove>().getCurrentRoom() == transform.root.gameObject && curdown <= 0)
             {
                 curdown = cooldown;
                 GameObject curBat = Instantiate(bat, transform.position, transform.rotation);

@@ -21,7 +21,7 @@ public class shootAtPlayer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (curdown <= 0 && Vector3.Distance(transform.position, target.transform.position) <= maxDist)
+        if (target.transform.parent.gameObject.GetComponent<playerMove>().getCurrentRoom() == transform.root.gameObject && curdown <= 0)
         {
             curdown = cooldown;
             Instantiate(bul, transform.position, transform.rotation);
