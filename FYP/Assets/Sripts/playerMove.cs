@@ -58,10 +58,9 @@ public class playerMove : MonoBehaviour
         return turning;
     }
 
-    public void turnToTarget(Vector3 targetTransform)
+    public void turnToTarget(Quaternion _targetRot)
     {
-        turning = true;
-        Vector3 direction = targetTransform - transform.position;
+        /*Vector3 direction = targetTransform - transform.position;
         //targetRot = _targetRot;
         //targetRot = Quaternion.FromToRotation(transform.forward, direction);
         targetRot = Quaternion.LookRotation(target.transform.position);
@@ -69,7 +68,9 @@ public class playerMove : MonoBehaviour
         targetRotVec.x = transform.rotation.eulerAngles.x;
         targetRotVec.z = transform.rotation.eulerAngles.z;
         targetRot = Quaternion.Euler(targetRotVec);
-        targetRot = targetRot * Quaternion.Euler(new Vector3(0, 180, 0));
+        targetRot = targetRot * Quaternion.Euler(new Vector3(0, 180, 0));*/
+        targetRot = _targetRot;
+        turning = true;
     }
 
     public void moveToTarget(GameObject _target)

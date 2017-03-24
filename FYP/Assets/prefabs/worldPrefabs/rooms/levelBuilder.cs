@@ -57,6 +57,8 @@ public class levelBuilder : MonoBehaviour {
         curOutDoorRot = curRooms[0].GetComponent<roomController>().getOutDoorRot();
         //Debug.Log("outDoorPos:" + curOutDoor + " outDoorRot:" + curOutDoorRot);
         StartCoroutine(trackRooms());
+        GameObject player = GameObject.Find("playerMover");
+        player.transform.position = curRooms[0].GetComponent<roomController>().getFirstWatpoint().transform.position;
     }
 
     IEnumerator trackRooms()

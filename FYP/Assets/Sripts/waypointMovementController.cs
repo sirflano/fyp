@@ -35,8 +35,7 @@ public class waypointMovementController : MonoBehaviour
                 //{
                 if (turnPlayer)//|| player.GetComponent<playerMove>().getTurning())
                 {
-                    //player.GetComponent<playerMove>().turnToTarget(transform.rotation);
-                    player.GetComponent<playerMove>().turnToTarget(target.transform.position);
+                    player.GetComponent<playerMove>().turnToTarget(transform.rotation);
                     /*if (!player.GetComponent<playerMove>().getTurning())
                     {
                         player.GetComponent<playerMove>().turnToTarget(transform.rotation);
