@@ -33,13 +33,19 @@ public class shooty : MonoBehaviour {
     public GameObject player;
     public Quaternion currentAngle;
 
-    private float maxBullets = 5;
+    private float maxBullets = 6;
     private float curBullets;
 
     float scale = 1.0f;
+
+    public AudioClip lazer;
+    private AudioSource source;
+    public AudioClip reload;
+
 	// Use this for initialization
 	void Start () {
         LookForController();
+        source = gameObject.GetComponent<AudioSource>();
 
         // create the thread
         runThread = true;
@@ -58,6 +64,7 @@ public class shooty : MonoBehaviour {
         {
             if(curBullets > 0)
             {
+                source.PlayOneShot(lazer, Random.Range(0.5f, 1));
                 Instantiate(bul, transform.position, transform.rotation);
                 curdown = cooldown;
                 curBullets -= 1;
@@ -67,6 +74,7 @@ public class shooty : MonoBehaviour {
         }
         else if(Input.GetKeyDown("space") && curdown <=0)
         {
+            
             Instantiate(bul, transform.position, transform.rotation);
             curdown = cooldown;
         }
@@ -246,7 +254,11 @@ public class shooty : MonoBehaviour {
     {
         if(other.gameObject.layer == 13)
         {
-            curBullets = maxBullets;
+            if(curBullets < maxBullets)
+            {
+                source.PlayOneShot(reload, 1);
+                curBullets = maxBullets;
+            }
         }
     }
 }

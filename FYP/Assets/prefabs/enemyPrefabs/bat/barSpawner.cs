@@ -29,6 +29,7 @@ public class barSpawner : MonoBehaviour {
             {
                 curdown = cooldown;
                 GameObject curBat = Instantiate(bat, transform.position, transform.rotation);
+                curBat.GetComponent<batFlight>().setCurRoom(transform.root.gameObject);
                 curBat.GetComponent<batFlight>().target = target;
             
             }

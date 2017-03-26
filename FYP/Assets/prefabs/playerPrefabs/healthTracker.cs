@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class healthTracker : MonoBehaviour {
-    public Image healthBar;
+    public Image healthBarLeft;
+    public Image healthBarRight;
     public float maxHealth;
     private float curHealth;
 	// Use this for initialization
@@ -15,11 +16,12 @@ public class healthTracker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        healthBar.fillAmount = curHealth / maxHealth;
+        healthBarLeft.fillAmount = curHealth / maxHealth;
+        healthBarRight.fillAmount = curHealth / maxHealth;
 
         if(curHealth <= 0)
         {
-            SceneManager.LoadScene("badEnd");
+            SceneManager.LoadScene("subsequentMenu");
             curHealth = maxHealth;
         }
 	}

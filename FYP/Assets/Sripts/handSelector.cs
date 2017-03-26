@@ -21,7 +21,6 @@ public class handSelector : MonoBehaviour {
         Debug.Log(leftHanded);
         if (other.gameObject.layer == 11)
         {
-            
             gun.GetComponent<handsTest>().leftHanded = leftHanded;
             gun.GetComponent<handsTest>().handSelected = true;
         }

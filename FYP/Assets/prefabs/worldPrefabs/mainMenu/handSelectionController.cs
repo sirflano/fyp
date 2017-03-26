@@ -14,7 +14,9 @@ public class handSelectionController : MonoBehaviour {
 	void Start () {
         gun = GameObject.FindGameObjectWithTag("gun");
         cubeMan = GameObject.FindGameObjectWithTag("cubeMan");
-	}
+        cubeMan.GetComponent<handsTest>().setHandSelected(false);
+        configured = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -31,4 +33,9 @@ public class handSelectionController : MonoBehaviour {
             Object.Destroy(rightHand);
         }
 	}
+
+    private void OnLevelWasLoaded(int level)
+    {
+        
+    }
 }

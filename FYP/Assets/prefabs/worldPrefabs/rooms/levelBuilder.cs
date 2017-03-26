@@ -71,6 +71,7 @@ public class levelBuilder : MonoBehaviour {
             {
                 for(int i = 0; i < tempRooms.Count; i++) {
                     curRooms.Add(tempRooms[i]);
+                    enemiesToSpawn += 2;
                     //Object.Destroy(tempRooms[i]);
                     tempRooms.Remove(tempRooms[i]);
                     curOutDoor = tempOutDoor;
@@ -135,7 +136,7 @@ public class levelBuilder : MonoBehaviour {
         tempRooms[tempRooms.Count - 1].GetComponent<enemySpawner>().spawnEnemies(enemiesToSpawn);
         curOutDoor = tempRooms[tempRooms.Count - 1].GetComponent<roomController>().getOutDoorPos();
         curOutDoorRot = tempRooms[tempRooms.Count - 1].GetComponent<roomController>().getOutDoorRot();
-        enemiesToSpawn += 2;
+        //enemiesToSpawn += 2;
         spawnRoom = false;
     }
     private void placeCorridor()

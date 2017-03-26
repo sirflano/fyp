@@ -98,6 +98,11 @@ public class enemySpawner : MonoBehaviour {
         }
     }
 
+    public void addEnemy(GameObject _enemy)
+    {
+        enemies.Add(_enemy);
+    }
+
     private bool checkSpawnPos(Vector3 spawnPos)
     {
         return true;

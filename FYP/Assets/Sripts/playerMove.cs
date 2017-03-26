@@ -75,7 +75,7 @@ public class playerMove : MonoBehaviour
 
     public void moveToTarget(GameObject _target)
     {
-        Debug.Log("moveToTargetCalled");
+        //Debug.Log("moveToTargetCalled");
         movement = _target.transform.position - transform.position;
         movement = Vector3.Normalize(movement);
         target = _target;

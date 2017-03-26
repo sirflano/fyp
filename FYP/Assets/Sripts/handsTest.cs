@@ -122,4 +122,10 @@ public class handsTest : MonoBehaviour
             }
         }
     }
+
+    public void setHandSelected(bool _setting)
+    {
+        Debug.Log("setHandSelected called");
+        handSelected = _setting;
+    }
 }

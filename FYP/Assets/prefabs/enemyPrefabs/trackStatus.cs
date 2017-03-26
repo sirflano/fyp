@@ -12,7 +12,10 @@ public class trackStatus : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(isDesctoyed)
+        {
+            Destroy(gameObject);
+        }
 	}
 
     public void setIsDestroyed(bool status)
