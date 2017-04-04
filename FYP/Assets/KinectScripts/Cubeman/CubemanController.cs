@@ -163,26 +163,8 @@ public class CubemanController : MonoBehaviour
 						posJoint.x = -posJoint.x;
 						posJoint.z = -posJoint.z;
 					}
-                    /*if(Vector3.Distance(bones[i].transform.localPosition, posJoint) >= jitterFilterTresh)
-                    {
-                        if(i==2)
-                        {
-
-                        }
-                        else if(i==3)
-                        {
-                            //Camera.main.transform.position = posJoint;
-                            bones[i].transform.localPosition = posJoint;
-                        }
-                        else
-                        {
-					        bones[i].transform.localPosition = posJoint;
-					        bones[i].transform.rotation = rotJoint;
-                        }
-                    }*/
                     if (i == 3)
                     {
-                        //Camera.main.transform.position = posJoint;
                         bones[i].transform.localPosition = posJoint;
                     }
                     else
@@ -204,11 +186,6 @@ public class CubemanController : MonoBehaviour
 				{
 					bones[i].gameObject.SetActive(false);
 				}
-                GameObject tempHand = new GameObject();
-                tempHand.transform.position = rightHandPos;
-                tempHand.transform.LookAt(leftHandPos);
-                handsRot = tempHand.transform.localRotation;
-                //KinectHelper.VectorBetween(playerID, leftHandPos, rightHandPos);
             }	
 		}
 
@@ -231,7 +208,7 @@ public class CubemanController : MonoBehaviour
 						{
 							lines[i].gameObject.SetActive(true);
 							
-							//lines[i].SetVertexCount(2);
+                            lines[i].numPositions = 2;
 							lines[i].SetPosition(0, posParent);
 							lines[i].SetPosition(1, posJoint);
 
