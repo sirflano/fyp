@@ -6,11 +6,9 @@ using UnityEngine.SceneManagement;
 public class loadScene : MonoBehaviour {
 
     public string scene;
-    private GameObject gun;
     // Use this for initialization
     void Start()
     {
-        gun = GameObject.FindGameObjectWithTag("gun");
     }
 
     // Update is called once per frame
@@ -21,6 +19,7 @@ public class loadScene : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        //If the object collides with a player bullet object load the scene specified in the Unity inspector
         if(other.gameObject.layer == 9)
         {
             SceneManager.LoadScene(scene);

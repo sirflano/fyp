@@ -13,6 +13,7 @@ public class spawnObj : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //If the timer has passed 10 seconds spawn an object defined in the unity inspector
 	    if(timer >= 10) {
             GameObject enemey = Instantiate(obj, this.transform.position, this.transform.rotation) as GameObject;
             timer = 0;

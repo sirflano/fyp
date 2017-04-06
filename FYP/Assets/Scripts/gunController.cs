@@ -43,22 +43,27 @@ public class gunController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        LookForController();
+        //reset bullets and initialize the audio player
         source = gameObject.GetComponent<AudioSource>();
+        curBullets = maxBullets;
 
+        //This code was provided to me, It runs the serial monitor reader on a seperate thread
+        LookForController();
         // create the thread
         runThread = true;
         Thread ThreadForController = new Thread(new ThreadStart(ThreadWorker));
         ThreadForController.Start();
-        curBullets = maxBullets;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        //update UI elements and cooldown
         displayString.text = calibarionString;
         bullets.fillAmount = curBullets / maxBullets;
         bullets2.fillAmount = curBullets / maxBullets;
         curdown = curdown - 1 * Time.deltaTime;
+
+        //If the player is able to fire, spawn a bullet object, update the remaining bullets, reset cooldown, play a sound clip, and send a message to the Arduino to run the servo motor
         if (button && curdown <= 0)
         {
             if(curBullets > 0)
@@ -71,12 +76,8 @@ public class gunController : MonoBehaviour {
             }
             button = false;
         }
-        else if(Input.GetKeyDown("space") && curdown <=0)
-        {
-            
-            Instantiate(bul, transform.position, transform.rotation);
-            curdown = cooldown;
-        }
+
+        //update the guns orientation if it's been calibrated, otherwise pause the game
         if(gunCalibrated)
         {
             Time.timeScale = 1;
@@ -88,8 +89,11 @@ public class gunController : MonoBehaviour {
             Time.timeScale = 0;
         }
     }
+
+    //This function was provided for me, it takes the string read from the serial port, I wrote what it does with this string
     void ProcessMessage(string message)
     {
+        //split the string and check if it is configured
         string[] decoded = message.Split(':');
         if (decoded[1] == "NotConfigured")
         {
@@ -98,16 +102,19 @@ public class gunController : MonoBehaviour {
         }
         else
         {
+            //If the gun has been freshly calibrated set the rotation offset around the Y to match the current orientation
             if(!gunCalibrated)
             {
                 gunCalibrated = true;
                 initY = float.Parse(decoded[0]);
             }
+            //blank the calibration string as the gun has been calibrated and update the orientation variables
             calibarionString = "";
             x = initX - float.Parse(decoded[2]);
             y = (initY - float.Parse(decoded[0]) - 180) % 360;
             z = initZ - float.Parse(decoded[1]);
             
+            //If the string has a fourth element attempt to fire the gun
             if (decoded.Length > 3)
             {
                 button = true;
@@ -115,6 +122,7 @@ public class gunController : MonoBehaviour {
         }
     }
 
+    //this function was provided for me. It reads in strings from the serial port and passes them to the processMessage function
     void ThreadWorker()
     {
         while (runThread)
@@ -135,13 +143,14 @@ public class gunController : MonoBehaviour {
         }
     }
 
-
+    //this function was provided for me. It closes the thread when closing the program
     void OnApplicationQuit()
     {
         controller.Close();
         runThread = false;
     }
 
+    //this function was provided for me. It checks each of the serial ports to find an arduino controller
     public void LookForController()
     {
         string[] ports = SerialPort.GetPortNames();
@@ -165,6 +174,7 @@ public class gunController : MonoBehaviour {
         }
     }
 
+    //If the gun collides with the reload zone, reload the gun
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == 13)

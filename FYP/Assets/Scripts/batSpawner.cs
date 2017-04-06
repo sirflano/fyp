@@ -12,18 +12,21 @@ public class batSpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //reset cooldown, target player
         curdown = cooldown;
         target = GameObject.FindGameObjectWithTag("enemyTarget");
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        //if the target has been lost retarget player
         if(target == null)
         {
             target = GameObject.FindGameObjectWithTag("enemyTarget");
         }
         else
         {
+            //If the cooldown has passed spawn a bat and have it target the player, then reset cooldown. else tick down the cooldown
 		    if(target.transform.parent.gameObject.GetComponent<playerMove>().getCurrentRoom() == transform.root.gameObject && curdown <= 0)
             {
                 curdown = cooldown;

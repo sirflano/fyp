@@ -6,6 +6,7 @@ public class addEnemyToRoom : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //Add enemy with this script attached to parent rooms list of enemies
         transform.parent.GetComponent<enemySpawner>().addEnemy(gameObject);
 	}
 	

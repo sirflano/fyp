@@ -15,6 +15,7 @@ public class bulletDestroyOnEnemies : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        //If the attached object(the players buller) collides with an enemy destroy it and create a small particle system
         if(other.gameObject.layer == 10)
         {
             Instantiate(pop, transform.position, transform.rotation);

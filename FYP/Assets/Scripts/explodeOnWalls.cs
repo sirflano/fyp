@@ -17,6 +17,7 @@ public class explodeOnWalls : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        //If the attached GameObject collides with a wall object destroy it and spawn a small particle system
         if(other.gameObject.layer == 8)
         {
             Instantiate(pop, transform.position, transform.rotation);

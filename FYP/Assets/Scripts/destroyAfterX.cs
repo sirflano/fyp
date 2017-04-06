@@ -14,6 +14,7 @@ public class destroyAfterX : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //count how long object has been alive, if it's been alive longer than the time defined in the inspector destroy the object, usually applied to particle systems etc.
         curTime += Time.deltaTime;
         if(curTime >= time)
         {

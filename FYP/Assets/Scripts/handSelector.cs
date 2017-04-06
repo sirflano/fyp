@@ -9,6 +9,7 @@ public class handSelector : MonoBehaviour {
     private GameObject gun;
 	// Use this for initialization
 	void Start () {
+        //Initialise the gun
         gun = GameObject.FindGameObjectWithTag("cubeMan");
 	}
 	
@@ -18,7 +19,7 @@ public class handSelector : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(Time.timeScale);
+        //If this object collides with the players skeleton while selection is not paused set the preferred hand of the gun component to match the choice in the Unity Inspector
         if (other.gameObject.layer == 11 && !gun.GetComponent<gunPlacer>().getSelectionPaused())
         {
             gun.GetComponent<gunPlacer>().leftHanded = leftHanded;

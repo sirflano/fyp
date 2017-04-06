@@ -20,6 +20,7 @@ public class roomController : MonoBehaviour {
     private Bounds bounds;
 	// Use this for initialization
 	void Start () {
+        //Initialise the levelBuilder and door varibles
         levelBuilder = GameObject.FindGameObjectWithTag("levelBuilder");
         completed = false;
         outDoorPos = outDoor.transform.position;
@@ -27,6 +28,7 @@ public class roomController : MonoBehaviour {
         inDoorPos = inDoor.transform.localPosition;
         inDoorRot = inDoor.transform.localRotation;
 
+        //Combine the bounds of all children objects to get the bounds of the room as a whole
         bounds = new Bounds();
         Renderer[] childrenBounds = GetComponentsInChildren<Renderer>();
         for(int i = 0; i < childrenBounds.Length; i++)
@@ -37,6 +39,7 @@ public class roomController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //Check each of the waypoints in the room to see if they player has already passed through them, If they have passed through them all update the completed boolean
         completedWaypoints = 0;
         outDoorPos = outDoor.transform.position;
         outDoorRot = outDoor.transform.rotation;
@@ -53,6 +56,7 @@ public class roomController : MonoBehaviour {
         }
 	}
 
+    //These are functions for accessing the varibles in the room controller, they are used by the level builder when generating levels
     public Vector3 getInDoorPos()
     {
         return inDoor.transform.localPosition;
@@ -96,11 +100,12 @@ public class roomController : MonoBehaviour {
     {
         return waypoints[0];
     }
+
     private void OnTriggerEnter(Collider other)
     {
+        //If the room collides with another room clear the temp room array and restart the generation process
         if(other.gameObject.layer == 8)
         {
-            Debug.Log("rooms colliding");
             levelBuilder.GetComponent<levelBuilder>().restartGen();
         }
     }

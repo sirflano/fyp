@@ -8,12 +8,12 @@ public class shootAtPlayer : MonoBehaviour {
     private GameObject target;
     //public float maxBats;
     public float cooldown;
-    private float maxDist = 100;
     private float curdown;
 
     // Use this for initialization
     void Start()
     {
+        //initialise the cooldown and target variables
         curdown = cooldown;
         target = GameObject.FindGameObjectWithTag("enemyTarget");
     }
@@ -21,6 +21,7 @@ public class shootAtPlayer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        //If the cooldown has passed instatiate a bullet object and reset the cooldown
         if (target.transform.parent.gameObject.GetComponent<playerMove>().getCurrentRoom() == transform.root.gameObject && curdown <= 0)
         {
             curdown = cooldown;

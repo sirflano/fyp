@@ -11,13 +11,12 @@ public class waypointMovementController : MonoBehaviour
     public bool fight;
     public float fightTimer;
     public bool turnPlayer;
-    private bool playerTurned = false;
     private float timeFaught = 0;
     public bool completed = false;
     // Use this for initialization
     void Start()
     {
-
+        //Initialise the player
         player = GameObject.Find("PlayerMover");
     }
 
@@ -26,14 +25,14 @@ public class waypointMovementController : MonoBehaviour
     {
         if (player != null)
         {
-            
+            //Once activated send the player the commands specificed in the inspector window of this object
             if (active)
             {
+                //turn the player before stopping them to fight before moving them
                 if (turnPlayer)
                 {
                     player.GetComponent<playerMove>().turnToTarget(transform.rotation);
                     turnPlayer = false;
-                    playerTurned = true;
                 }
                 else if (fight)
                 {
@@ -67,6 +66,7 @@ public class waypointMovementController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //When the waypoint collides with the player activate it
         if(other.gameObject.layer == 11)
         {
             if (!completed)

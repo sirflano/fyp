@@ -12,6 +12,7 @@ public class moveForward : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //move the object in the direction of its forward vector at the speed defined in the inspector
         transform.position += transform.forward * moveSpeed * Time.deltaTime;
 	}
 }
